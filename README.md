@@ -1,0 +1,3 @@
+# capi-scripts
+
+* `make release`
