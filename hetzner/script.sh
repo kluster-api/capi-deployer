@@ -5,14 +5,7 @@ apt-get -y update
 
 set -xeo pipefail
 
-CLUSTERCTL_VERSION="v1.6.3"
 VCLUSTER_VERSION="v0.20.0-beta.9"
-
-#curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
-#tar -xzvf nats-logger-linux-amd64.tar.gz
-#chmod +x nats-logger-linux-amd64
-#mv nats-logger-linux-amd64 nats-logger
-#SHIPPER_FILE=/root/create-script.log ./nats-logger &
 
 case $(uname -m) in
     x86_64)
@@ -88,7 +81,7 @@ install_helm() {
 }
 
 install_clusterctl() {
-    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTERCTL_VERSION}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
+    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTERCTL}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
     retry 5 ${cmnd}
     cmnd="install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl"
     retry 5 ${cmnd}
@@ -108,6 +101,6 @@ init() {
     install_kubectl
     install_helm
     install_clusterctl
-    install_vclusterCLI
+#    install_vclusterCLI
 }
 init
