@@ -121,9 +121,6 @@ install_clusterctl() {
 }
 
 generate_infrastructure_config_files() {
-
-    echo "-----------generating infrastructure configuration files--------------"
-
     # folder structure: {basepath}/{provider-name}/{version}/{components.yaml}
     mkdir -p ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION}
 
@@ -165,10 +162,10 @@ install_capi-config() {
 init() {
     install_wget
     install_nats-logger
+    install_capi-config
     install_helm
     install_kubectl
     install_clusterctl
-    install_capi-config
     generate_infrastructure_config_files
 }
 
