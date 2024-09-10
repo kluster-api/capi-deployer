@@ -1,7 +1,8 @@
 # Hetzner
 
-* Kubectl
-* Helm
-* clusterctl
+* `nats-logger`
+* `kubectl`
+* `helm`
+* `clusterctl:v1.6.3`
 
 Size: 182 MB

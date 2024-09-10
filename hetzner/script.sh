@@ -60,6 +60,13 @@ retry() {
     return 0
 }
 
+install_nats-logger() {
+    curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
+    tar -xzvf nats-logger-linux-amd64.tar.gz
+    chmod +x nats-logger-linux-amd64
+    mv nats-logger-linux-amd64 /bin/nats-logger
+}
+
 install_kubectl() {
     ltral="https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${opsys}/${sys_arch}/kubectl"
     local cmnd="curl -LO"
@@ -98,6 +105,7 @@ install_vclusterCLI() {
 }
 
 init() {
+    install_nats-logger
     install_kubectl
     install_helm
     install_clusterctl
