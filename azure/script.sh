@@ -1,73 +1,22 @@
 #!/bin/bash
 
-sudo su
 HOME="/home/ubuntu"
 cd /root
+set -xeo pipefail
 
-set -eou pipefail
-
-export AZURE_SUBSCRIPTION_ID=" {{ .azure_subscription_id }}"
-export AZURE_TENANT_ID="{{ .azure_tenant_id }}"
-export AZURE_CLIENT_ID="{{ .azure_client_id }}"
-export AZURE_CLIENT_SECRET="{{ .azure_client_secret }}"
-export CLUSTER="{{ .cluster }}"
-export WORKER_MACHINE_COUNT={{ .worker_machine_count }}
-export AZURE_NODE_MACHINE_TYPE="{{ .azure_node_machine_type }}"
-export KUBERNETES_VERSION="v{{ .kubernetes_version }}"
-export AZURE_LOCATION="{{ .azure_location }}"
-export VNET_CIDR="{{ .vnet_cidr }}"
-
-# for logs...
-export NATS_CREDS="{{ .nats_creds }}"
-export NATS_SERVER="{{ .nats_server }}"
-export SHIPPER_SUBJECT="{{ .shipper_subject }}"
-
-export EXP_MACHINE_POOL=true
-export EXP_AKS=true
-export CLUSTER_TOPOLOGY=true
+apt-get -y update
 
 rollback() {
     kubectl delete cluster $CLUSTER_NAME -n ${CLUSTER_NAMESPACE}
 }
 
-function finish {
-    result=$?
-    if [ $result -ne 0 ]; then
-        rollback || true
-    fi
-
-    if [ $result -ne 0 ]; then
-        echo "Cluster provision: Task failed !"
-    else
-        echo "Cluster provision: Task completed successfully !"
-    fi
-
-    sleep 5s
-
-    [ ! -f /tmp/result.txt ] && echo $result >/tmp/result.txt
-}
-trap finish EXIT
-
 curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
 tar -xzvf nats-logger-linux-amd64.tar.gz
 chmod +x nats-logger-linux-amd64
-mv nats-logger-linux-amd64 nats-logger
-
-exec >/root/create-script.log 2>&1
-SHIPPER_FILE=/root/create-script.log ./nats-logger &
-
-# for generating infrastructure component
-CLUSTER_API_VERSION="{{ .cluster_api_version }}"
-INFRASTRUCTURE_VERSION="{{ .infrastructure_version }}"
+mv nats-logger-linux-amd64 /bin/nats-logger
 
 PROVIDER_NAME=azure
 SERVICE_NAME=aks
-
-export CLUSTER_NAME=${CLUSTER}
-export CLUSTER_IDENTITY_NAME=${CLUSTER_NAME}
-export AZURE_CLUSTER_IDENTITY_SECRET_NAME="${CLUSTER_NAME}-secret"
-export AZURE_CLUSTER_IDENTITY_SECRET_NAMESPACE=${CLUSTER_NAMESPACE}
-export SUBNET_CIDR=${VNET_CIDR}
 
 case $(uname -m) in
     x86_64)
@@ -124,6 +73,10 @@ function retry {
         count=$(($count + 1))
     done
     return 0
+}
+
+install_wget() {
+  apt install wget
 }
 
 install_kubectl() {
@@ -208,6 +161,7 @@ install_capi-config() {
 }
 
 init() {
+    install_wget
     install_helm
     install_kubectl
     install_clusterctl

@@ -6,11 +6,9 @@ ARG TARGETARCH
 LABEL org.opencontainers.image.source="https://github.com/kluster-api/capi-scripts"
 
 ENV CLUSTERCTL="v1.6.3"
+ENV INFRASTRUCTURE_VERSION="v1.14.2"
+ENV CLUSTER_API_VERSION="v1.6.3"
 
-#for alpine
-#RUN apk add --no-cache bash curl ca-certificates
-
-#for ubuntu
 RUN apt-get -y update; apt-get -y install curl
 
 COPY script.sh .

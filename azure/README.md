@@ -1,9 +1,11 @@
 # Azure
 
-* `Kubectl`
-* `Helm`
-* `Clusterctl v1.6.3`
-* `capi-config`
+* `wget`
+* `kubectl`
+* `helm`
+* `clusterctl` `v1.6.3`
+* `capi-config-linux-amd64`
+* `nats-logger`
 * `infrustructure config files` `/home/ubuntu/assets/config.yaml`
 
-Size: 182 MB
+Size: 220 MB
