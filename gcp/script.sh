@@ -6,12 +6,8 @@ set -xeo pipefail
 
 apt-get -y update
 
-rollback() {
-    kubectl delete cluster $CLUSTER_NAME -n ${CLUSTER_NAMESPACE}
-}
-
-PROVIDER_NAME=azure
-SERVICE_NAME=aks
+PROVIDER_NAME=gcp
+SERVICE_NAME=gke
 
 case $(uname -m) in
     x86_64)
@@ -39,18 +35,18 @@ elif [[ "$OSTYPE" == darwin* ]]; then
     opsys=darwin
 fi
 
-function timestamp() {
+timestamp() {
     date +"%Y/%m/%d %T"
 }
 
-function log() {
+log() {
     local type="$1"
     local msg="$2"
     local script_name=${0##*/}
     echo "$(timestamp) [$script_name] [$type] $msg"
 }
 
-function retry {
+retry() {
     local retries="$1"
     shift
 
@@ -74,6 +70,12 @@ install_wget() {
   apt install wget
 }
 
+install_yq() {
+    BINARY="yq_linux_amd64"
+    wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${BINARY}.tar.gz -O - |\
+      tar xz && mv ${BINARY} /bin/yq
+}
+
 install_nats-logger() {
     curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
     tar -xzvf nats-logger-linux-amd64.tar.gz
@@ -81,6 +83,13 @@ install_nats-logger() {
     mv nats-logger-linux-amd64 /bin/nats-logger
 }
 
+install_capi-config() {
+    curl -fsSLO https://github.com/bytebuilders/capi-config/releases/download/v0.0.1/capi-config-linux-amd64.tar.gz
+    tar -xzf capi-config-linux-amd64.tar.gz
+    cp capi-config-linux-amd64 /bin
+}
+
+#download kubectl from: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
 install_kubectl() {
     echo "--------------installing kubectl--------------"
     ltral="https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${opsys}/${sys_arch}/kubectl"
@@ -97,6 +106,18 @@ install_kubectl() {
     retry 5 ${cmnd}
 }
 
+#download clusterctl from: https://cluster-api.sigs.k8s.io/user/quick-start.html
+install_clusterctl() {
+    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTERCTL}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
+    retry 5 ${cmnd}
+
+    cmnd="install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl"
+    retry 5 ${cmnd}
+
+    clusterctl version
+}
+
+#download helm from apt (debian/ubuntu) https://helm.sh/docs/intro/install/
 install_helm() {
     echo "--------------installing helm--------------"
     local cmnd="curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3"
@@ -106,18 +127,6 @@ install_helm() {
 
     cmnd="./get_helm.sh"
     retry 5 ${cmnd}
-}
-
-
-
-install_clusterctl() {
-    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTERCTL}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
-    retry 5 ${cmnd}
-
-    cmnd="install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl"
-    retry 5 ${cmnd}
-
-    clusterctl version
 }
 
 generate_infrastructure_config_files() {
@@ -152,15 +161,9 @@ overridesFolder: "${HOME}/assets"
 EOF
 }
 
-#capi-config-linux-amd64 capz <./cluster.yaml >./configured-cluster.yaml
-install_capi-config() {
-    curl -fsSLO https://github.com/bytebuilders/capi-config/releases/download/v0.0.1/capi-config-linux-amd64.tar.gz
-    tar -xzf capi-config-linux-amd64.tar.gz
-    cp capi-config-linux-amd64 /bin
-}
-
 init() {
     install_wget
+    install_yq
     install_nats-logger
     install_capi-config
     install_helm

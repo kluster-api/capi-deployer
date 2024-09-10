@@ -6,10 +6,6 @@ set -xeo pipefail
 
 apt-get -y update
 
-rollback() {
-    kubectl delete cluster $CLUSTER_NAME -n ${CLUSTER_NAMESPACE}
-}
-
 PROVIDER_NAME=azure
 SERVICE_NAME=aks
 

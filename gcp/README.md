@@ -1,6 +1,8 @@
-# Azure
+# GCP
 
 * `wget`
+* `snap`
+* `yq`
 * `kubectl`
 * `helm`
 * `clusterctl:v1.6.3`
@@ -8,4 +10,4 @@
 * `nats-logger`
 * `infrustructure config files` `/home/ubuntu/assets/config.yaml`
 
-Size: 220 MB
+Size: 223 MB

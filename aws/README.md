@@ -1,4 +1,4 @@
-# Azure
+# AWS
 
 * `wget`
 * `nats-logger`
