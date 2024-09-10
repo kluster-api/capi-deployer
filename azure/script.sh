@@ -10,11 +10,6 @@ rollback() {
     kubectl delete cluster $CLUSTER_NAME -n ${CLUSTER_NAMESPACE}
 }
 
-curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
-tar -xzvf nats-logger-linux-amd64.tar.gz
-chmod +x nats-logger-linux-amd64
-mv nats-logger-linux-amd64 /bin/nats-logger
-
 PROVIDER_NAME=azure
 SERVICE_NAME=aks
 
@@ -77,6 +72,13 @@ function retry {
 
 install_wget() {
   apt install wget
+}
+
+install_nats-logger() {
+    curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
+    tar -xzvf nats-logger-linux-amd64.tar.gz
+    chmod +x nats-logger-linux-amd64
+    mv nats-logger-linux-amd64 /bin/nats-logger
 }
 
 install_kubectl() {
@@ -162,6 +164,7 @@ install_capi-config() {
 
 init() {
     install_wget
+    install_nats-logger
     install_helm
     install_kubectl
     install_clusterctl
