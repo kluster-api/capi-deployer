@@ -1,10 +1,5 @@
 #!/bin/bash
-
-HOME="/home/ubuntu"
-cd /root
 set -xeo pipefail
-
-apt-get -y update
 
 PROVIDER_NAME=gcp
 SERVICE_NAME=gke
@@ -66,14 +61,10 @@ retry() {
     return 0
 }
 
-install_wget() {
-  apt install wget
-}
-
 install_yq() {
     BINARY="yq_linux_amd64"
-    wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${BINARY}.tar.gz -O - |\
-      tar xz && mv ${BINARY} /bin/yq
+    wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${BINARY}.tar.gz -O - |
+        tar xz && mv ${BINARY} /bin/yq
 }
 
 install_nats-logger() {
@@ -100,7 +91,7 @@ install_kubectl() {
     cmnd="curl -LO"
     retry 5 ${cmnd} ${ltral}
 
-    echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+    echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c
 
     cmnd="install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl"
     retry 5 ${cmnd}
@@ -162,7 +153,6 @@ EOF
 }
 
 init() {
-    install_wget
     install_yq
     install_nats-logger
     install_capi-config

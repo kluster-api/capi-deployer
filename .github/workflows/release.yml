@@ -16,13 +16,11 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        provider: [capa, capg, caph, capz]
     steps:
       - uses: actions/checkout@v1
-
-      - name: Print version info
-        id: semver
-        run: |
-          make version
 
       - name: Set up QEMU
         id: qemu
@@ -40,8 +38,10 @@ jobs:
 
       - name: Run checks
         run: |
+          cd ${{ matrix.provider }}
           make ci
 
       - name: Build
         run: |
+          cd ${{ matrix.provider }}
           make release

@@ -1,11 +1,5 @@
 #!/bin/bash
-HOME="/root"
-cd ${HOME}
-apt-get -y update
-
 set -xeo pipefail
-
-VCLUSTER_VERSION="v0.20.0-beta.9"
 
 case $(uname -m) in
     x86_64)
@@ -30,6 +24,7 @@ if [[ "$OSTYPE" == linux* ]]; then
 elif [[ "$OSTYPE" == darwin* ]]; then
     opsys=darwin
 fi
+
 timestamp() {
     date +"%Y/%m/%d %T"
 }
@@ -74,7 +69,7 @@ install_kubectl() {
     ltral="https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${opsys}/${sys_arch}/kubectl.sha256"
     cmnd="curl -LO"
     retry 5 ${cmnd} ${ltral}
-#    echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+    #    echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c
     cmnd="install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl"
     retry 5 ${cmnd}
 }
@@ -95,20 +90,10 @@ install_clusterctl() {
     clusterctl version
 }
 
-install_vclusterCLI() {
-
-    local cmnd="curl -L -o vcluster https://github.com/loft-sh/vcluster/releases/download/${VCLUSTER_VERSION}/vcluster-${opsys}-${sys_arch}"
-    retry 5 ${cmnd}
-    install -c -m 0755 vcluster /usr/local/bin
-    rm -f vcluster
-
-}
-
 init() {
     install_nats-logger
     install_kubectl
     install_helm
     install_clusterctl
-#    install_vclusterCLI
 }
 init

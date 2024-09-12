@@ -1,3 +1,1 @@
-# capi-scripts
-
-* `make release`
+# capi-deployer
