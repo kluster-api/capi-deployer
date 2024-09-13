@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xeo pipefail
+HOME="/home"
 
 PROVIDER_NAME=gcp
 SERVICE_NAME=gke
@@ -120,6 +121,17 @@ install_helm() {
     retry 5 ${cmnd}
 }
 
+install_gcloud() {
+    # Downloading gcloud package
+    curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz
+
+    # Installing the package
+    mkdir -p /usr/local/gcloud \
+      && tar -C /usr/local/gcloud -xvf /tmp/google-cloud-sdk.tar.gz \
+      && /usr/local/gcloud/google-cloud-sdk/install.sh
+
+}
+
 generate_infrastructure_config_files() {
     # folder structure: {basepath}/{provider-name}/{version}/{components.yaml}
     mkdir -p ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION}
@@ -153,6 +165,7 @@ EOF
 }
 
 init() {
+    install_gcloud
     install_yq
     install_nats-logger
     install_capi-config
