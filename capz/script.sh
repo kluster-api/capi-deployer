@@ -3,6 +3,7 @@ set -xeo pipefail
 
 PROVIDER_NAME=azure
 SERVICE_NAME=aks
+HOME="/home"
 
 case $(uname -m) in
     x86_64)

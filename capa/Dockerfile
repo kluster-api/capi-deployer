@@ -11,7 +11,7 @@ ARG INFRASTRUCTURE_VERSION="v2.4.2"
 ARG CLUSTER_API_VERSION="v1.6.3"
 ARG IAM_AUTHENTICATOR_VERSION="0.6.14"
 
-RUN apk add --update --no-cache bash ca-certificates curl openssl unzip wget
+RUN apk add --update --no-cache bash ca-certificates curl openssl unzip wget yq
 
 COPY script.sh .
 
