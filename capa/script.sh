@@ -103,7 +103,7 @@ install_clusterctl() {
 }
 
 install_clusterawsadm() {
-    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/${CLUSTERAWSADM_VERSION}/clusterawsadm_${CLUSTERAWSADM_VERSION}_${opsys}_${sys_arch} -o clusterawsadm"
+    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/${CLUSTERAWSADM_VERSION}/clusterawsadm-${opsys}-${sys_arch} -o clusterawsadm"
     retry 5 ${cmnd}
     chmod +x clusterawsadm
     mv clusterawsadm /usr/local/bin
