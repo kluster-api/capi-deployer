@@ -62,12 +62,6 @@ retry() {
     return 0
 }
 
-install_yq() {
-    BINARY="yq_linux_amd64"
-    wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${BINARY}.tar.gz -O - |
-        tar xz && mv ${BINARY} /bin/yq
-}
-
 install_nats-logger() {
     curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
     tar -xzvf nats-logger-linux-amd64.tar.gz
@@ -100,7 +94,7 @@ install_kubectl() {
 
 #download clusterctl from: https://cluster-api.sigs.k8s.io/user/quick-start.html
 install_clusterctl() {
-    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTERCTL}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
+    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
     retry 5 ${cmnd}
 
     cmnd="install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl"
@@ -166,7 +160,6 @@ EOF
 
 init() {
     install_gcloud
-    install_yq
     install_nats-logger
     install_capi-config
     install_helm

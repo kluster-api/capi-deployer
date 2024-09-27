@@ -5,7 +5,6 @@ LABEL org.opencontainers.image.source=https://github.com/kluster-api/capi-deploy
 ARG TARGETOS
 ARG TARGETARCH
 
-ARG CLUSTERCTL="v1.8.3"
 ARG INFRASTRUCTURE_VERSION="v1.17.0"
 ARG CLUSTER_API_VERSION="v1.8.3"
 
