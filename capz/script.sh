@@ -3,6 +3,7 @@ set -xeo pipefail
 
 PROVIDER_NAME=azure
 SERVICE_NAME=aks
+HOME="/home"
 
 case $(uname -m) in
     x86_64)
@@ -96,7 +97,7 @@ install_helm() {
 }
 
 install_clusterctl() {
-    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTERCTL}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
+    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
     retry 5 ${cmnd}
 
     cmnd="install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl"

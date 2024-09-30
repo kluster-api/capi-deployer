@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xeo pipefail
+HOME="/home"
 
 PROVIDER_NAME=aws
 SERVICE_NAME=eks-managedmachinepool
@@ -94,7 +95,7 @@ install_helm() {
 }
 
 install_clusterctl() {
-    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTERCTL}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
+    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
     retry 5 ${cmnd}
     cmnd="install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl"
     retry 5 ${cmnd}
@@ -102,20 +103,19 @@ install_clusterctl() {
 }
 
 install_clusterawsadm() {
-    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/${CLUSTERAWSADM_VERSION}/clusterawsadm_${CLUSTERAWSADM_VERSION}_${opsys}_${sys_arch} -o clusterawsadm"
+    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api-provider-aws/releases/download/${INFRASTRUCTURE_VERSION}/clusterawsadm-${opsys}-${sys_arch} -o clusterawsadm"
     retry 5 ${cmnd}
     chmod +x clusterawsadm
     mv clusterawsadm /usr/local/bin
     clusterawsadm version
 }
 
+
 install_aws_iam_authenticator() {
     local cmnd="curl -Lo aws-iam-authenticator https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${IAM_AUTHENTICATOR_VERSION}/aws-iam-authenticator_${IAM_AUTHENTICATOR_VERSION}_${opsys}_${sys_arch}"
     retry 5 ${cmnd}
-    chmod +x ./aws-iam-authenticator
-    mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$PATH:$HOME/bin
-    echo 'export PATH=$PATH:$HOME/bin' >>~/.bashrc
-    aws-iam-authenticator help
+    chmod +x aws-iam-authenticator
+    mv aws-iam-authenticator /usr/local/bin
 }
 
 generate_infrastructure_config_files() {

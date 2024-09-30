@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xeo pipefail
+HOME="/home"
 
 PROVIDER_NAME=gcp
 SERVICE_NAME=gke
@@ -61,12 +62,6 @@ retry() {
     return 0
 }
 
-install_yq() {
-    BINARY="yq_linux_amd64"
-    wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/${BINARY}.tar.gz -O - |
-        tar xz && mv ${BINARY} /bin/yq
-}
-
 install_nats-logger() {
     curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
     tar -xzvf nats-logger-linux-amd64.tar.gz
@@ -99,7 +94,7 @@ install_kubectl() {
 
 #download clusterctl from: https://cluster-api.sigs.k8s.io/user/quick-start.html
 install_clusterctl() {
-    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTERCTL}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
+    local cmnd="curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/clusterctl-${opsys}-${sys_arch} -o clusterctl"
     retry 5 ${cmnd}
 
     cmnd="install -o root -g root -m 0755 clusterctl /usr/local/bin/clusterctl"
@@ -118,6 +113,17 @@ install_helm() {
 
     cmnd="./get_helm.sh"
     retry 5 ${cmnd}
+}
+
+install_gcloud() {
+    # Downloading gcloud package
+    curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz
+
+    # Installing the package
+    mkdir -p /usr/local/gcloud \
+      && tar -C /usr/local/gcloud -xvf /tmp/google-cloud-sdk.tar.gz \
+      && /usr/local/gcloud/google-cloud-sdk/install.sh
+
 }
 
 generate_infrastructure_config_files() {
@@ -153,7 +159,7 @@ EOF
 }
 
 init() {
-    install_yq
+    install_gcloud
     install_nats-logger
     install_capi-config
     install_helm
