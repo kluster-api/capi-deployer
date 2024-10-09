@@ -56,7 +56,7 @@ retry() {
 }
 
 install_nats-logger() {
-    curl -fsSLO https://github.com/bytebuilders/nats-logger/releases/latest/download/nats-logger-linux-amd64.tar.gz
+    curl -fsSLO https://github.com/appscode-cloud/nats-logger/releases/download/v0.0.6/nats-logger-linux-amd64.tar.gz
     tar -xzvf nats-logger-linux-amd64.tar.gz
     chmod +x nats-logger-linux-amd64
     mv nats-logger-linux-amd64 /bin/nats-logger
