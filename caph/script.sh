@@ -90,10 +90,16 @@ install_clusterctl() {
     clusterctl version
 }
 
+install_rclone() {
+    curl https://rclone.org/install.sh | bash
+    rclone --version
+}
+
 init() {
     install_nats-logger
     install_kubectl
     install_helm
     install_clusterctl
+    install_rclone
 }
 init
