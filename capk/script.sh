@@ -90,9 +90,11 @@ install_clusterctl() {
     clusterctl version
 }
 
-install_rclone() {
-    curl https://rclone.org/install.sh | bash
-    rclone --version
+#capi-config-linux-amd64 capz <./cluster.yaml >./configured-cluster.yaml
+install_capi-config() {
+    curl -fsSLO https://github.com/bytebuilders/capi-config/releases/download/v0.0.1/capi-config-linux-amd64.tar.gz
+    tar -xzf capi-config-linux-amd64.tar.gz
+    cp capi-config-linux-amd64 /bin
 }
 
 init() {
@@ -100,6 +102,6 @@ init() {
     install_kubectl
     install_helm
     install_clusterctl
-    install_rclone
+    install_capi-config
 }
 init
