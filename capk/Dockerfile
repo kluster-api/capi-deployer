@@ -7,7 +7,7 @@ ARG TARGETARCH
 
 ARG CLUSTERCTL="v1.8.5"
 
-RUN apk add --update --no-cache bash ca-certificates curl openssl unzip wget
+RUN apk add --update --no-cache bash ca-certificates curl openssl unzip wget jq
 
 COPY script.sh .
 
