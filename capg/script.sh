@@ -70,7 +70,7 @@ install_nats-logger() {
 }
 
 install_capi-config() {
-    curl -fsSLO https://github.com/bytebuilders/capi-config/releases/download/v0.0.1/capi-config-linux-amd64.tar.gz
+    curl -fsSLO https://github.com/kluster-api/capi-config/releases/download/v0.0.2/capi-config-linux-amd64.tar.gz
     tar -xzf capi-config-linux-amd64.tar.gz
     cp capi-config-linux-amd64 /bin
 }
