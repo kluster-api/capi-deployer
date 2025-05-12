@@ -5,8 +5,8 @@ LABEL org.opencontainers.image.source=https://github.com/kluster-api/capi-deploy
 ARG TARGETOS
 ARG TARGETARCH
 
-ARG INFRASTRUCTURE_VERSION="v1.7.0"
-ARG CLUSTER_API_VERSION="v1.7.3"
+ARG INFRASTRUCTURE_VERSION="v1.9.0"
+ARG CLUSTER_API_VERSION="v1.9.7"
 
 RUN apk add --update --no-cache bash ca-certificates curl openssl unzip wget jq  python3 py3-crcmod gnupg libc6-compat yq
 
