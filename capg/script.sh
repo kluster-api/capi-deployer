@@ -130,15 +130,15 @@ generate_infrastructure_config_files() {
     # folder structure: {basepath}/{provider-name}/{version}/{components.yaml}
     mkdir -p ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION}
 
-    wget -P ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} https://cdn.appscode.com/files/cluster-api/${CLUSTER_API_VERSION}/core-components.yaml
-    wget -P ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} https://cdn.appscode.com/files/cluster-api/${CLUSTER_API_VERSION}/metadata.yaml
-    wget -P ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} https://cdn.appscode.com/files/cluster-api/${CLUSTER_API_VERSION}/bootstrap-components.yaml
-    wget -P ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} https://cdn.appscode.com/files/cluster-api/${CLUSTER_API_VERSION}/metadata.yaml
-    wget -P ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION} https://cdn.appscode.com/files/cluster-api/${CLUSTER_API_VERSION}/control-plane-components.yaml
-    wget -P ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION} https://cdn.appscode.com/files/cluster-api/${CLUSTER_API_VERSION}/metadata.yaml
-    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://cdn.appscode.com/files/cluster-api-provider-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION}/infrastructure-components.yaml
-    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://cdn.appscode.com/files/cluster-api-provider-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION}/cluster-template-${SERVICE_NAME}.yaml
-    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://cdn.appscode.com/files/cluster-api-provider-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION}/metadata.yaml
+    wget -P ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/core-components.yaml
+    wget -P ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/metadata.yaml
+    wget -P ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/bootstrap-components.yaml
+    wget -P ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/metadata.yaml
+    wget -P ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/control-plane-components.yaml
+    wget -P ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/metadata.yaml
+    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://github.com/kubernetes-sigs/cluster-api-provider-${PROVIDER_NAME}/releases/download/${INFRASTRUCTURE_VERSION}/infrastructure-components.yaml
+    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://github.com/kubernetes-sigs/cluster-api-provider-${PROVIDER_NAME}/releases/download/${INFRASTRUCTURE_VERSION}/cluster-template-${SERVICE_NAME}.yaml
+    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://github.com/kubernetes-sigs/cluster-api-provider-${PROVIDER_NAME}/releases/download/${INFRASTRUCTURE_VERSION}/metadata.yaml
 
     cat <<EOF >${HOME}/assets/config.yaml
 providers:
