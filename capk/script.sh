@@ -1,6 +1,11 @@
 #!/bin/bash
 set -xeo pipefail
 
+HOME="/home"
+
+PROVIDER_NAME=kubevirt
+
+
 case $(uname -m) in
     x86_64)
         sys_arch=amd64
@@ -90,6 +95,42 @@ install_clusterctl() {
     clusterctl version
 }
 
+generate_infrastructure_config_files() {
+    # folder structure: {basepath}/{provider-name}/{version}/{components.yaml}
+    mkdir -p ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION}
+
+    wget -P ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/core-components.yaml
+    wget -P ${HOME}/assets/cluster-api/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/metadata.yaml
+    wget -P ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/bootstrap-components.yaml
+    wget -P ${HOME}/assets/bootstrap-kubeadm/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/metadata.yaml
+    wget -P ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/control-plane-components.yaml
+    wget -P ${HOME}/assets/control-plane-kubeadm/${CLUSTER_API_VERSION} https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API_VERSION}/metadata.yaml
+    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://github.com/kubernetes-sigs/cluster-api-provider-${PROVIDER_NAME}/releases/download/${INFRASTRUCTURE_VERSION}/infrastructure-components.yaml
+    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://github.com/kubernetes-sigs/cluster-api-provider-${PROVIDER_NAME}/releases/download/${INFRASTRUCTURE_VERSION}/cluster-template.yaml
+    wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://github.com/kubernetes-sigs/cluster-api-provider-${PROVIDER_NAME}/releases/download/${INFRASTRUCTURE_VERSION}/metadata.yaml
+
+    curl -o ${HOME}/assets/template.yaml "https://raw.githubusercontent.com/RejwankabirHamim/managed-kubernetes-poc/main/Templates/capi-kamaji-kubevirt-final.yaml"
+
+    cat <<EOF >${HOME}/assets/config.yaml
+providers:
+  - name: "cluster-api"
+    type: "CoreProvider"
+    url: "${HOME}/assets/cluster-api/$CLUSTER_API_VERSION/core-components.yaml"
+  - name: "kubeadm"
+    type: "BootstrapProvider"
+    url: "${HOME}/assets/bootstrap-kubeadm/$CLUSTER_API_VERSION/bootstrap-components.yaml"
+  - name: "kubeadm"
+    type: "ControlPlaneProvider"
+    url: "${HOME}/assets/control-plane-kubeadm/$CLUSTER_API_VERSION/control-plane-components.yaml"
+  - name: "${PROVIDER_NAME}"
+    type: "InfrastructureProvider"
+    url: "${HOME}/assets/infrastructure-${PROVIDER_NAME}/$INFRASTRUCTURE_VERSION/infrastructure-components.yaml"
+overridesFolder: "${HOME}/assets"
+EOF
+
+
+}
+
 #capi-config-linux-amd64 capz <./cluster.yaml >./configured-cluster.yaml
 install_capi-config() {
     curl -fsSLO https://github.com/kluster-api/capi-config/releases/download/v0.0.2/capi-config-linux-amd64.tar.gz
@@ -102,6 +143,7 @@ init() {
     install_kubectl
     install_helm
     install_clusterctl
+    generate_infrastructure_config_files
     install_capi-config
 }
 init
