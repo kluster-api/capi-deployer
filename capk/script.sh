@@ -109,7 +109,7 @@ generate_infrastructure_config_files() {
     wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://github.com/kubernetes-sigs/cluster-api-provider-${PROVIDER_NAME}/releases/download/${INFRASTRUCTURE_VERSION}/cluster-template.yaml
     wget -P ${HOME}/assets/infrastructure-${PROVIDER_NAME}/${INFRASTRUCTURE_VERSION} https://github.com/kubernetes-sigs/cluster-api-provider-${PROVIDER_NAME}/releases/download/${INFRASTRUCTURE_VERSION}/metadata.yaml
 
-    curl -o ${HOME}/assets/template.yaml "https://raw.githubusercontent.com/RejwankabirHamim/managed-kubernetes-poc/main/Templates/capi-kamaji-kubevirt-final.yaml"
+    curl -o ${HOME}/assets/template.yaml "https://raw.githubusercontent.com/appscode/static-assets/refs/heads/master/files/cluster-api-provider-kubevirt/capi-kamaji-kubevirt-template.yaml"
 
     cat <<EOF >${HOME}/assets/config.yaml
 providers:
