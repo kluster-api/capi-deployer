@@ -55,12 +55,6 @@ retry() {
     return 0
 }
 
-install_nats-logger() {
-    curl -fsSLO https://github.com/appscode-cloud/nats-logger/releases/download/v0.0.6/nats-logger-linux-amd64.tar.gz
-    tar -xzvf nats-logger-linux-amd64.tar.gz
-    chmod +x nats-logger-linux-amd64
-    mv nats-logger-linux-amd64 /bin/nats-logger
-}
 
 install_kubectl() {
     ltral="https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/${opsys}/${sys_arch}/kubectl"
@@ -90,18 +84,9 @@ install_clusterctl() {
     clusterctl version
 }
 
-#capi-config-linux-amd64 capz <./cluster.yaml >./configured-cluster.yaml
-install_capi-config() {
-    curl -fsSLO https://github.com/kluster-api/capi-config/releases/download/v0.0.2/capi-config-linux-amd64.tar.gz
-    tar -xzf capi-config-linux-amd64.tar.gz
-    cp capi-config-linux-amd64 /bin
-}
-
 init() {
-    install_nats-logger
     install_kubectl
     install_helm
     install_clusterctl
-    install_capi-config
 }
 init
