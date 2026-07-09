@@ -3,7 +3,7 @@ SHELL=/bin/bash -o pipefail
 REGISTRY   ?= ghcr.io/appscode
 BIN        ?= $(notdir $(shell pwd))-deployer
 IMAGE      := $(REGISTRY)/$(BIN)
-TAG        ?= $(shell git describe --exact-match --abbrev=0 2>/dev/null || echo "")
+TAG        ?= $(shell git describe --tags --exact-match --abbrev=0 2>/dev/null || echo "")
 
 DOCKER_PLATFORMS := linux/amd64 linux/arm64
 PLATFORM         ?= linux/$(subst x86_64,amd64,$(subst aarch64,arm64,$(shell uname -m)))
@@ -41,6 +41,7 @@ docker-manifest:
 
 .PHONY: release
 release:
+	@if [ -z "$(TAG)" ]; then echo "TAG is empty: HEAD is not on a tag"; exit 1; fi
 	@$(MAKE) all-push docker-manifest --no-print-directory
 
 .PHONY: version
