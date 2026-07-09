@@ -4,4 +4,4 @@
 * `helm`
 * `clusterctl:v1.13.2`
 
-Size: 441 MB
+Size: 82 MB
