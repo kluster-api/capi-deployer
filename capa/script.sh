@@ -159,8 +159,10 @@ install_eksctl() {
     ARCH=amd64
     PLATFORM=$(uname -s)_$ARCH
     curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
-    # (Optional) Verify checksum
-    curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_checksums.txt" | grep $PLATFORM | sha256sum -c
+    # Verify only the downloaded archive, excluding the SBOM checksum.
+    curl -fsSL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_checksums.txt" |
+        awk -v file="eksctl_${PLATFORM}.tar.gz" '$2 == file { print; found = 1 } END { if (!found) exit 1 }' |
+        sha256sum -c -
     tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
     mv /tmp/eksctl /usr/local/bin
 }
