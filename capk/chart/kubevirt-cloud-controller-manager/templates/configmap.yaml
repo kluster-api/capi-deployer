@@ -16,6 +16,7 @@ data:
       networkID: {{ .Values.networkID }}
       subnetID: {{ .Values.subnetID }}
       tenantID: {{ .Values.tenantID }}
+      datacenterUUID: {{ if .Values.rpcServerAddr }}{{ required "datacenterUUID is required when rpcServerAddr is set" .Values.datacenterUUID }}{{ else }}{{ .Values.datacenterUUID }}{{ end }}
       fipNetworkID: {{ .Values.fipNetworkID }}
       ipType: {{ .Values.ipType }}
       onlyServiceController: {{ .Values.onlyServiceController }}
@@ -24,3 +25,4 @@ data:
     instancesV2:
       enabled: {{ .Values.cloudConfig.instancesV2.enabled }}
       zoneAndRegionEnabled: {{ .Values.cloudConfig.instancesV2.zoneAndRegionEnabled }}
+

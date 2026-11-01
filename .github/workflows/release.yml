@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        provider: [capa, capg, caph, capz, capk]
+        provider: [capa, capg, caph, capz, capk, capo]
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
